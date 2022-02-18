@@ -8,8 +8,7 @@ const finalMessage = document.getElementById('final-message');
 const figureParts = document.querySelectorAll('.figure-part');
 
 const words = ['application', 'programming', 'interface', 'wizard'];
-
-let selectedWord = words[Math.floor(Math.random() * words.length)];
+getRandomWord();
 
 const correctLetters = [];
 const wrongLetters = [];
@@ -94,11 +93,21 @@ playAgainBtn.addEventListener('click', () => {
   // empy arrays
   correctLetters.splice(0);
   wrongLetters.splice(0);
-
-  selectedWord = words[Math.floor(Math.random() * words.length)];
   displayWord();
+  getRandomWord();
   updateWrongLettersEl();
   popup.style.display = 'none';
 });
 
-displayWord();
+async function getRandomWord() {
+  const resp = await fetch('https://random-word-api.herokuapp.com/all');
+  const data = await resp.json();
+
+  fiveLetterWords = data.filter((word) => {
+    if (word.length === 5) return word;
+  });
+
+  selectedWord =
+    fiveLetterWords[Math.floor(Math.random() * fiveLetterWords.length)];
+  displayWord();
+}
